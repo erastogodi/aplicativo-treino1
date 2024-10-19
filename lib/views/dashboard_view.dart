@@ -3,21 +3,23 @@ import 'rotina_view.dart';
 import 'macros_form_view.dart';
 
 class DashboardView extends StatelessWidget {
+  const DashboardView({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Treino App'),
+        title: const Text('Treino App'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            Text(
+            const Text(
               'Bem-vindo de volta!',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
@@ -25,9 +27,9 @@ class DashboardView extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => RotinaView()),
                 );
               },
-              child: Text('Criar Nova Rotina'),
+              child: const Text('Criar Nova Rotina'),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
@@ -35,7 +37,7 @@ class DashboardView extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => MacrosFormView()),
                 );
               },
-              child: Text('Calcular Macros'),
+              child: const Text('Calcular Macros'),
             ),
           ],
         ),

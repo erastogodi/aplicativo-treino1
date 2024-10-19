@@ -1,7 +1,7 @@
 import '../models/treino_model.dart';
 
 class TreinoController {
-  List<Treino> _treinos = [];
+  final List<Treino> _treinos = [];
 
   List<Treino> getTreinos() {
     return _treinos;

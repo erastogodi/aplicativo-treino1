@@ -28,7 +28,8 @@ flutter:
   # Adiciona a imagem de fundo para o projeto
   assets:
     - assets/images/background_fitness.jpg
-
+    - assets/images/background.jpg
+    
   # Adiciona fontes customizadas, se necessário no futuro
   # fonts:
   #   - family: CustomFont

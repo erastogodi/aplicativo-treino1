@@ -6,6 +6,8 @@ void main() {
 }
 
 class TreinoApp extends StatelessWidget {
+  const TreinoApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

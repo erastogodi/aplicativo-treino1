@@ -3,6 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'macros_form_view.dart';
 
 class LoginView extends StatelessWidget {
+  const LoginView({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -10,7 +12,7 @@ class LoginView extends StatelessWidget {
         children: [
           // Background Image
           Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               image: DecorationImage(
                 image: AssetImage('assets/images/background_fitness.jpg'),
                 fit: BoxFit.cover,
@@ -40,14 +42,14 @@ class LoginView extends StatelessWidget {
                         Shadow(
                           blurRadius: 10.0,
                           color: Colors.black.withOpacity(0.8), // Sombra escura
-                          offset: Offset(2.0, 2.0),
+                          offset: const Offset(2.0, 2.0),
                         ),
                       ],
                     ),
                   ),
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 // Texto menor: "Faça Login"
                 Text(
                   'Faça Login',
@@ -61,31 +63,31 @@ class LoginView extends StatelessWidget {
                   ),
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 // Campos de texto com opacidade no fundo para melhor legibilidade
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
                   decoration: BoxDecoration(
                     color: Colors.white
                         .withOpacity(0.7), // Fundo dos campos com opacidade
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: TextField(
+                  child: const TextField(
                     decoration: InputDecoration(
                       labelText: 'Email',
                       border: InputBorder.none,
                     ),
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
                   decoration: BoxDecoration(
                     color: Colors.white
                         .withOpacity(0.7), // Fundo dos campos com opacidade
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: TextField(
+                  child: const TextField(
                     decoration: InputDecoration(
                       labelText: 'Senha',
                       border: InputBorder.none,
@@ -93,13 +95,12 @@ class LoginView extends StatelessWidget {
                     obscureText: true,
                   ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 // Botão de Entrar com opacidade
                 ElevatedButton(
                   onPressed: () {
                     // Implementar lógica de login
                   },
-                  child: Text('Entrar'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white
                         .withOpacity(0.8), // Botão claro para contraste
@@ -108,8 +109,9 @@ class LoginView extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
+                  child: Text('Entrar'),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 // Botão de Pular com estilo transparente
                 ElevatedButton(
                   onPressed: () {
@@ -118,12 +120,12 @@ class LoginView extends StatelessWidget {
                       MaterialPageRoute(builder: (context) => MacrosFormView()),
                     );
                   },
-                  child: Text('Pular'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.transparent, // Botão transparente
                     foregroundColor:
                         Colors.white, // Texto branco para melhor contraste
                   ),
+                  child: Text('Pular'),
                 ),
               ],
             ),
