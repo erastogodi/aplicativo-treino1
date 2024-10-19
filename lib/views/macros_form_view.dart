@@ -3,6 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'macros_result_view.dart';
 
 class MacrosFormView extends StatefulWidget {
+  const MacrosFormView({super.key});
+
   @override
   _MacrosFormViewState createState() => _MacrosFormViewState();
 }
@@ -19,7 +21,7 @@ class _MacrosFormViewState extends State<MacrosFormView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Inserir Dados'),
+        title: const Text('Inserir Dados'),
         backgroundColor: Colors.green.shade700, // Cor verde
       ),
       body: Padding(

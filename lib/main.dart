@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'views/login_view.dart';
 
 void main() {
-  runApp(TreinoApp());
+  runApp(const TreinoApp());
 }
 
 class TreinoApp extends StatelessWidget {
@@ -16,7 +16,7 @@ class TreinoApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: LoginView(),
+      home: const LoginView(),
     );
   }
 }

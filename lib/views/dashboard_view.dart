@@ -24,7 +24,7 @@ class DashboardView extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => RotinaView()),
+                  MaterialPageRoute(builder: (context) => const RotinaView()),
                 );
               },
               child: const Text('Criar Nova Rotina'),
@@ -34,7 +34,8 @@ class DashboardView extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => MacrosFormView()),
+                  MaterialPageRoute(
+                      builder: (context) => const MacrosFormView()),
                 );
               },
               child: const Text('Calcular Macros'),

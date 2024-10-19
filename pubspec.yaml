@@ -13,14 +13,16 @@ dependencies:
 
   # Ícones do Cupertino para iOS
   cupertino_icons: ^1.0.8
-  google_fonts: ^6.2.1
+  google_fonts: ^6.2.1 
+  http_parser: 4.0.2
+  font_awesome_flutter: ^10.7.0
 
   # Adicione aqui qualquer outra dependência necessária no futuro
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^4.0.0
+  flutter_lints: ^5.0.0
 
 flutter:
   uses-material-design: true
@@ -29,6 +31,10 @@ flutter:
   assets:
     - assets/images/background_fitness.jpg
     - assets/images/background.jpg
+    - assets/images/icons8-bitten-apple-40.png
+    - assets/images/icons8-breakfast-64 (1).png
+    - assets/images/icons8-green-salad-48.png
+    - assets/images/icons8-lunch-80.png
     
   # Adiciona fontes customizadas, se necessário no futuro
   # fonts:

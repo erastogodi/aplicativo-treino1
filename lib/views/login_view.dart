@@ -109,7 +109,7 @@ class LoginView extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  child: Text('Entrar'),
+                  child: const Text('Entrar'),
                 ),
                 const SizedBox(height: 10),
                 // Botão de Pular com estilo transparente
@@ -117,7 +117,8 @@ class LoginView extends StatelessWidget {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => MacrosFormView()),
+                      MaterialPageRoute(
+                          builder: (context) => const MacrosFormView()),
                     );
                   },
                   style: ElevatedButton.styleFrom(
@@ -125,7 +126,7 @@ class LoginView extends StatelessWidget {
                     foregroundColor:
                         Colors.white, // Texto branco para melhor contraste
                   ),
-                  child: Text('Pular'),
+                  child: const Text('Pular'),
                 ),
               ],
             ),
