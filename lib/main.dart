@@ -16,7 +16,7 @@ class TreinoApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: const LoginView(),
+      home: LoginView(),
     );
   }
 }

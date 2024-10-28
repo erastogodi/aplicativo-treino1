@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../controllers/user_controller.dart';
 import 'macros_form_view.dart';
 
 class LoginView extends StatelessWidget {
-  const LoginView({super.key});
+  final UserController _controller = UserController();
+
+  LoginView({super.key}); // Controller
 
   @override
   Widget build(BuildContext context) {
+    final TextEditingController emailController = TextEditingController();
+    final TextEditingController passwordController = TextEditingController();
+
     return Scaffold(
       body: Stack(
         children: [
@@ -19,30 +25,28 @@ class LoginView extends StatelessWidget {
               ),
             ),
           ),
-          // Transparent Layer to darken the background slightly for better contrast
           Container(
-            color: Colors.black.withOpacity(0.5), // Optional: darken background
+            color: Colors.black.withOpacity(0.5),
           ),
-          // Login Form
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // Texto principal com fonte arredondada e cor branca
+                // Texto principal
                 Text(
                   'Treino App',
                   style: GoogleFonts.poppins(
-                    textStyle: TextStyle(
+                    textStyle: const TextStyle(
                       fontSize: 40,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white, // Texto branco com sombra
+                      color: Colors.white,
                       shadows: [
                         Shadow(
                           blurRadius: 10.0,
-                          color: Colors.black.withOpacity(0.8), // Sombra escura
-                          offset: const Offset(2.0, 2.0),
+                          color: Colors.black,
+                          offset: Offset(2.0, 2.0),
                         ),
                       ],
                     ),
@@ -50,30 +54,27 @@ class LoginView extends StatelessWidget {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 10),
-                // Texto menor: "Faça Login"
                 Text(
                   'Faça Login',
                   style: GoogleFonts.poppins(
                     textStyle: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w400,
-                      color: Colors.white.withOpacity(
-                          0.9), // Cor branca com leve transparência
+                      color: Colors.white.withOpacity(0.9),
                     ),
                   ),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 20),
-                // Campos de texto com opacidade no fundo para melhor legibilidade
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   decoration: BoxDecoration(
-                    color: Colors.white
-                        .withOpacity(0.7), // Fundo dos campos com opacidade
+                    color: Colors.white.withOpacity(0.7),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const TextField(
-                    decoration: InputDecoration(
+                  child: TextField(
+                    controller: emailController,
+                    decoration: const InputDecoration(
                       labelText: 'Email',
                       border: InputBorder.none,
                     ),
@@ -83,12 +84,12 @@ class LoginView extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   decoration: BoxDecoration(
-                    color: Colors.white
-                        .withOpacity(0.7), // Fundo dos campos com opacidade
+                    color: Colors.white.withOpacity(0.7),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const TextField(
-                    decoration: InputDecoration(
+                  child: TextField(
+                    controller: passwordController,
+                    decoration: const InputDecoration(
                       labelText: 'Senha',
                       border: InputBorder.none,
                     ),
@@ -96,15 +97,20 @@ class LoginView extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
-                // Botão de Entrar com opacidade
                 ElevatedButton(
                   onPressed: () {
-                    // Implementar lógica de login
+                    _controller.setLoginData(
+                      emailController.text,
+                      passwordController.text,
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                          content: Text('Login realizado com sucesso!')),
+                    );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white
-                        .withOpacity(0.8), // Botão claro para contraste
-                    foregroundColor: Colors.black, // Texto do botão em preto
+                    backgroundColor: Colors.white.withOpacity(0.8),
+                    foregroundColor: Colors.black,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -112,7 +118,6 @@ class LoginView extends StatelessWidget {
                   child: const Text('Entrar'),
                 ),
                 const SizedBox(height: 10),
-                // Botão de Pular com estilo transparente
                 ElevatedButton(
                   onPressed: () {
                     Navigator.push(
@@ -122,9 +127,8 @@ class LoginView extends StatelessWidget {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.transparent, // Botão transparente
-                    foregroundColor:
-                        Colors.white, // Texto branco para melhor contraste
+                    backgroundColor: Colors.transparent,
+                    foregroundColor: Colors.white,
                   ),
                   child: const Text('Pular'),
                 ),

@@ -1,133 +1,74 @@
 import 'package:flutter/material.dart';
+import '../controllers/user_controller.dart';
 
-class MacrosResultView extends StatefulWidget {
+class NewMacrosResultView extends StatefulWidget {
   final double weight;
   final double height;
   final int age;
   final String gender;
   final String activityLevel;
+  final UserController controller;
 
-  const MacrosResultView({
-    super.key,
+  const NewMacrosResultView({
+    Key? key,
     required this.weight,
     required this.height,
     required this.age,
     required this.gender,
     required this.activityLevel,
-  });
+    required this.controller,
+  }) : super(key: key);
 
   @override
-  _MacrosResultViewState createState() => _MacrosResultViewState();
+  _NewMacrosResultViewState createState() => _NewMacrosResultViewState();
 }
 
-class _MacrosResultViewState extends State<MacrosResultView> {
-  double currentWaterIntake = 0; // Começa com 0 ml de água
-
-  // Função para calcular os macros e a quantidade de água
-  Map<String, dynamic> calculateMacros() {
-    double baseCalories =
-        (10 * widget.weight) + (6.25 * widget.height) - (5 * widget.age);
-    if (widget.gender == 'Masculino') {
-      baseCalories += 5;
-    } else {
-      baseCalories -= 161;
-    }
-
-    double activityMultiplier = 1.2;
-    if (widget.activityLevel == 'Médio') {
-      activityMultiplier = 1.55;
-    } else if (widget.activityLevel == 'Alto') {
-      activityMultiplier = 1.9;
-    }
-    double totalCalories = baseCalories * activityMultiplier;
-
-    double protein = widget.weight * 1.8;
-    double fat = totalCalories * 0.25 / 9;
-    double carbs = (totalCalories - (protein * 4 + fat * 9)) / 4;
-
-    // Cálculo da quantidade de água (ml) recomendada por dia
-    double waterIntake =
-        widget.weight * 35; // Fórmula simples: 35ml por kg de peso
-
-    // Dividir os macros em 4 refeições
-    return {
-      'calories': totalCalories / 4,
-      'protein': protein / 4,
-      'fat': fat / 4,
-      'carbs': carbs / 4,
-      'water': waterIntake, // Quantidade total de água
-    };
-  }
-
-  // Função para aumentar a quantidade de água ingerida
-  void addWater() {
-    final macros = calculateMacros();
-    setState(() {
-      if (currentWaterIntake < macros['water']) {
-        currentWaterIntake += 350;
-        if (currentWaterIntake > macros['water']) {
-          currentWaterIntake = macros['water']; // Limita ao máximo
-        }
-      }
-    });
-  }
-
-  // Função para reduzir a quantidade de água ingerida
-  void removeWater() {
-    setState(() {
-      if (currentWaterIntake >= 350) {
-        currentWaterIntake -= 350;
-      } else {
-        currentWaterIntake = 0; // Limita a zero
-      }
-    });
+class _NewMacrosResultViewState extends State<NewMacrosResultView> {
+  @override
+  void initState() {
+    super.initState();
+    widget.controller.setPhysicalData(
+      weight: widget.weight,
+      height: widget.height,
+      age: widget.age,
+      gender: widget.gender,
+      activityLevel: widget.activityLevel,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    final macros = calculateMacros();
+    final macros = widget.controller.calculateMacros();
+
     return Scaffold(
       body: Stack(
         children: [
-          // Background Image (ofuscado)
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
-                image: AssetImage(
-                    'assets/images/background.jpg'), // Use the background image que você preferir
+                image: AssetImage('assets/images/background.jpg'),
                 fit: BoxFit.cover,
               ),
             ),
           ),
-          // Transparent Layer to darken the background slightly for better contrast
           Container(
-            color: Colors.black.withOpacity(0.5), // Optional: darken background
+            color: Colors.black.withOpacity(0.5),
           ),
-          // Main Content
           Column(
             children: [
-              // Título "Cálculo dos Macros" (fixo no topo)
               Container(
                 padding: const EdgeInsets.all(16),
                 color: Colors.black.withOpacity(0.6),
-                child: Text(
+                child: const Text(
                   'Cálculo dos Macros',
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
-                    shadows: [
-                      Shadow(
-                        blurRadius: 10.0,
-                        color: Colors.black.withOpacity(0.8),
-                        offset: const Offset(2.0, 2.0),
-                      ),
-                    ],
                   ),
                   textAlign: TextAlign.center,
                 ),
               ),
-              // Resto da tela com scroll
               Expanded(
                 child: SingleChildScrollView(
                   child: Padding(
@@ -135,10 +76,8 @@ class _MacrosResultViewState extends State<MacrosResultView> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        // Quantidade de água no topo com o contador
                         _buildWaterIntake(macros['water']),
                         const SizedBox(height: 20),
-                        // Seções das refeições uma embaixo da outra
                         ListView.builder(
                           physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
@@ -151,10 +90,10 @@ class _MacrosResultViewState extends State<MacrosResultView> {
                               'Jantar'
                             ];
                             final icons = [
-                              'assets/images/icons8-bitten-apple-40.png', // Agora este ícone será o do Café da Manhã
-                              'assets/images/icons8-lunch-80.png', // Almoço permanece o mesmo
-                              'assets/images/icons8-breakfast-64 (1).png', // Agora este ícone será o do Café da Tarde
-                              'assets/images/icons8-green-salad-48.png', // Jantar permanece o mesmo
+                              'assets/images/icons8-bitten-apple-40.png',
+                              'assets/images/icons8-lunch-80.png',
+                              'assets/images/icons8-breakfast-64.png',
+                              'assets/images/icons8-green-salad-48.png',
                             ];
                             return _buildMacroSection(
                                 meals[index], macros, icons[index]);
@@ -172,36 +111,26 @@ class _MacrosResultViewState extends State<MacrosResultView> {
     );
   }
 
-  // Função para criar o contador de água com ícones de "mais" e "menos"
   Widget _buildWaterIntake(double waterIntake) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.blue.shade100.withOpacity(0.8), // Cor azul clara (água)
+        color: Colors.blue.shade100.withOpacity(0.8),
         borderRadius: BorderRadius.circular(10),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 8,
-            offset: const Offset(0, 4),
-          ),
-        ],
       ),
       child: Column(
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Ícone de copo de água
               Icon(
                 Icons.local_drink,
                 color: Colors.blue.shade700,
                 size: 30,
               ),
               const SizedBox(width: 10),
-              // Texto da quantidade de água sem "de Água"
               Text(
-                '${currentWaterIntake.toStringAsFixed(0)} / ${waterIntake.toStringAsFixed(0)} ml',
+                '${widget.controller.getCurrentWaterIntake().toStringAsFixed(0)} / ${waterIntake.toStringAsFixed(0)} ml',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -212,19 +141,21 @@ class _MacrosResultViewState extends State<MacrosResultView> {
             ],
           ),
           const SizedBox(height: 10),
-          // Barra de progresso de água
           LinearProgressIndicator(
-            value: currentWaterIntake / waterIntake, // Progresso da água
+            value: widget.controller.getCurrentWaterIntake() / waterIntake,
             backgroundColor: Colors.blue.shade200,
             valueColor: AlwaysStoppedAnimation<Color>(Colors.blue.shade700),
           ),
           const SizedBox(height: 10),
-          // Botões minimalistas para adicionar ou remover 350ml de água com o texto "Quantidade de Água"
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               IconButton(
-                onPressed: removeWater,
+                onPressed: () {
+                  setState(() {
+                    widget.controller.removeWater();
+                  });
+                },
                 icon: const Text(
                   '-',
                   style: TextStyle(
@@ -245,7 +176,11 @@ class _MacrosResultViewState extends State<MacrosResultView> {
               ),
               const SizedBox(width: 10),
               IconButton(
-                onPressed: addWater,
+                onPressed: () {
+                  setState(() {
+                    widget.controller.addWater(waterIntake);
+                  });
+                },
                 icon: const Text(
                   '+',
                   style: TextStyle(
@@ -262,30 +197,20 @@ class _MacrosResultViewState extends State<MacrosResultView> {
     );
   }
 
-  // Função para criar as seções das refeições com os ícones ajustados ao lado direito e exibir os macros
   Widget _buildMacroSection(
       String meal, Map<String, dynamic> macros, String iconPath) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.teal.shade100.withOpacity(0.9), // Cor verde mais suave
-        borderRadius: BorderRadius.circular(10), // Menos arredondado
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 8,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        color: Colors.teal.shade100.withOpacity(0.9),
+        borderRadius: BorderRadius.circular(10),
       ),
       child: Column(
         children: [
           Row(
-            mainAxisAlignment:
-                MainAxisAlignment.spaceBetween, // Espaçamento total
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // Texto da refeição
               Expanded(
                 child: Text(
                   meal,
@@ -294,20 +219,18 @@ class _MacrosResultViewState extends State<MacrosResultView> {
                     fontWeight: FontWeight.normal,
                     color: Colors.teal.shade900,
                   ),
-                  textAlign: TextAlign.left, // Texto à esquerda
+                  textAlign: TextAlign.left,
                 ),
               ),
-              // Ícone da refeição ao lado direito
               Image.asset(
                 iconPath,
-                width: 30, // Mesma largura para todos os ícones
-                height: 30, // Mesma altura para todos os ícones
+                width: 30,
+                height: 30,
               ),
             ],
           ),
           const SizedBox(height: 10),
-          Divider(color: Colors.teal.shade300), // Linha de separação
-          // Informações dos macros
+          Divider(color: Colors.teal.shade300),
           _buildMacroRow(
               'Calorias', macros['calories'].toStringAsFixed(0), 'kcal'),
           Divider(color: Colors.teal.shade300),
@@ -323,11 +246,9 @@ class _MacrosResultViewState extends State<MacrosResultView> {
     );
   }
 
-  // Função para exibir os detalhes de cada macro em estilo de linha
   Widget _buildMacroRow(String label, String value, String unit) {
     return Padding(
-      padding: const EdgeInsets.symmetric(
-          vertical: 4), // Ajustado para espaçamento consistente
+      padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
