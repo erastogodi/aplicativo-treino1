@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../controllers/user_controller.dart';
-import 'new_macros_result_view.dart'; // Use a nova view
+import 'home_page.dart'; // Importe a tela inicial
 
 class MacrosFormView extends StatefulWidget {
   const MacrosFormView({super.key});
@@ -151,29 +151,29 @@ class _MacrosFormViewState extends State<MacrosFormView> {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () async {
+                  // Quando o botão 'Calcular Macros' é pressionado
                   if (_formKey.currentState!.validate()) {
-                    // Usa Future para evitar travar a interface
-                    await Future.delayed(Duration(milliseconds: 100), () {
-                      _controller.setPhysicalData(
-                        weight: double.parse(_weightController.text),
-                        height: double.parse(_heightController.text),
-                        age: int.parse(_ageController.text),
-                        gender: _selectedGender,
-                        activityLevel: _selectedActivityLevel,
-                      );
-                    });
+                    double weight = double.parse(_weightController.text);
+                    double height = double.parse(_heightController.text);
+                    int age = int.parse(_ageController.text);
+                    String gender = _selectedGender;
+                    String activityLevel = _selectedActivityLevel;
 
-                    Navigator.push(
+                    // Armazena os dados
+                    _controller.setPhysicalData(
+                      weight: weight,
+                      height: height,
+                      age: age,
+                      gender: gender,
+                      activityLevel: activityLevel,
+                    );
+
+                    // Navega para a tela inicial
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => NewMacrosResultView(
-                          weight: double.parse(_weightController.text),
-                          height: double.parse(_heightController.text),
-                          age: int.parse(_ageController.text),
-                          gender: _selectedGender,
-                          activityLevel: _selectedActivityLevel,
-                          controller: _controller,
-                        ),
+                        builder: (context) =>
+                            HomePage(), // Substitua por sua tela inicial
                       ),
                     );
                   }

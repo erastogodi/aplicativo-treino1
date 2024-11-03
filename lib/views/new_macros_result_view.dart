@@ -9,7 +9,8 @@ class NewMacrosResultView extends StatefulWidget {
   final String activityLevel;
   final UserController controller;
 
-  const NewMacrosResultView({
+  const NewMacrosResultView(
+    String s, {
     Key? key,
     required this.weight,
     required this.height,

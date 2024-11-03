@@ -105,6 +105,11 @@ class UserController {
     }
   }
 
+  // Método para obter os dados físicos do usuário
+  UserModel? getUserData() {
+    return user;
+  }
+
   void removeWater() {
     _currentWaterIntake -= 350; // Remove 350ml por clique
     if (_currentWaterIntake < 0) {

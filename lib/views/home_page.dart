@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import '../controllers/home_controller.dart';
 import '../models/treino.dart';
+import '../models/user_model.dart';
 import 'workout_history_page.dart';
 import 'create_workout_page.dart';
+import 'profile.dart'; // Importe a página de perfil
+import 'new_macros_result_view.dart'; // Importe a página de macros (NewMacrosResultView)
+import '../controllers/user_controller.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -11,8 +15,11 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final HomeController _controller = HomeController();
+  final UserController _userController =
+      UserController(); // Mover a instância do UserController aqui
   bool treinoCheckInFeito = false;
   int totalCheckIns = 0;
+  int _selectedIndex = 0; // Adiciona o índice selecionado
 
   @override
   void initState() {
@@ -99,6 +106,54 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    switch (index) {
+      case 0: // Home
+        break; // Fica na mesma página
+      case 1: // Profile
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  ProfileScreen()), // Altere para a sua página de perfil
+        );
+        break;
+      case 2: // Macro
+        // Obter os dados do controlador
+        UserModel? userData =
+            _userController.getUserData(); // Usando a instância criada
+
+        if (userData != null) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => NewMacrosResultView('algum valor',
+                    weight: userData.weight,
+                    age: userData
+                        .age, // Certifique-se de que 'age' é uma propriedade do UserModel
+                    height: userData
+                        .height, // Certifique-se de que 'height' é uma propriedade do UserModel
+                    gender: userData
+                        .gender, // Certifique-se de que 'gender' é uma propriedade do UserModel
+                    activityLevel: userData
+                        .activityLevel, // Certifique-se de que 'activityLevel' é uma propriedade do UserModel
+                    controller:
+                        _userController)), // Usar a instância correta do UserController
+          );
+        } else {
+          // Lidar com o caso onde userData é null, se necessário
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Dados do usuário não disponíveis.')),
+          );
+        }
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -137,6 +192,25 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.fastfood), // ícone representando "Macros"
+            label: 'Macro',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.blue,
+        onTap: _onItemTapped,
       ),
     );
   }
@@ -226,9 +300,10 @@ class _HomePageState extends State<HomePage> {
             ),
             SizedBox(height: 8),
             Text(
-              '$totalCheckIns',
-              style: TextStyle(fontSize: 24, color: Colors.blue),
+              '$totalCheckIns check-ins realizados',
+              style: TextStyle(color: Colors.grey[600]),
             ),
+            // Aqui você pode adicionar mais informações sobre treinos se necessário
           ],
         ),
       ),
@@ -236,23 +311,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildUpcomingClasses() {
-    List<Treino> treinosAmanha = _controller.historicoTreinos.where((treino) {
-      DateTime treinoDate = DateTime.parse(treino.data);
-      DateTime amanha = DateTime.now().add(Duration(days: 1));
-      return treinoDate.year == amanha.year &&
-          treinoDate.month == amanha.month &&
-          treinoDate.day == amanha.day;
-    }).toList();
-
-    List<Treino> treinosProximoDia =
-        _controller.historicoTreinos.where((treino) {
-      DateTime treinoDate = DateTime.parse(treino.data);
-      DateTime proximoDia = DateTime.now().add(Duration(days: 2));
-      return treinoDate.year == proximoDia.year &&
-          treinoDate.month == proximoDia.month &&
-          treinoDate.day == proximoDia.day;
-    }).toList();
-
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
@@ -260,49 +318,16 @@ class _HomePageState extends State<HomePage> {
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Upcoming Classes',
+              'Próximas Aulas',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 8),
-            if (treinosAmanha.isNotEmpty) ...[
-              Text(
-                'Amanhã',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-              for (var treino in treinosAmanha)
-                _buildClassInfo(treino.nome, 'Amanhã'),
-              Divider(),
-            ],
-            if (treinosProximoDia.isNotEmpty) ...[
-              Text(
-                'Próximo Dia',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-              for (var treino in treinosProximoDia)
-                _buildClassInfo(treino.nome, 'Próximo Dia'),
-            ],
+            // Adicione aqui as informações sobre as próximas aulas
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildClassInfo(String className, String time) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          className,
-          style: TextStyle(fontSize: 16),
-        ),
-        Text(
-          time,
-          style: TextStyle(color: Colors.grey[600]),
-        ),
-      ],
     );
   }
 }
