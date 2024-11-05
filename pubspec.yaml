@@ -16,6 +16,7 @@ dependencies:
   google_fonts: ^6.2.1 
   http_parser: 4.0.2
   font_awesome_flutter: ^10.7.0
+  intl: ^0.18.0  
 
   # Adicione aqui qualquer outra dependência necessária no futuro
 
@@ -35,6 +36,11 @@ flutter:
     - assets/images/icons8-breakfast-64.png
     - assets/images/icons8-green-salad-48.png
     - assets/images/icons8-lunch-80.png
+    - assets/images/edit.png
+    - assets/images/relogio.png
+    - assets/images/background_treino.jpg
+    - assets/images/historia.png
+    - assets/images/novo.png
     
   # Adiciona fontes customizadas, se necessário no futuro
   # fonts:

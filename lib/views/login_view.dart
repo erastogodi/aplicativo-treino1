@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../controllers/user_controller.dart';
-import 'macros_form_view.dart';
+import 'main_nav_bar.dart'; // Importando MainNavBar para navegação
+import 'macros_form_view.dart'; // Importando MacrosFormView para navegação
 
 class LoginView extends StatelessWidget {
   final UserController _controller = UserController();
 
-  LoginView({super.key}); // Controller
+  LoginView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +35,6 @@ class LoginView extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // Texto principal
                 Text(
                   'Treino App',
                   style: GoogleFonts.poppins(
@@ -99,14 +99,27 @@ class LoginView extends StatelessWidget {
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
-                    _controller.setLoginData(
+                    bool loginSuccess = _controller.authenticate(
                       emailController.text,
                       passwordController.text,
                     );
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                          content: Text('Login realizado com sucesso!')),
-                    );
+
+                    if (loginSuccess) {
+                      // Navega para MainNavBar com dados padrão usando o construtor login
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MainNavBar.login(),
+                        ),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content:
+                              Text('Falha no login. Verifique as credenciais.'),
+                        ),
+                      );
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white.withOpacity(0.8),
@@ -120,10 +133,12 @@ class LoginView extends StatelessWidget {
                 const SizedBox(height: 10),
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.push(
+                    // Navega para MacrosFormView para inserir dados personalizados
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const MacrosFormView()),
+                        builder: (context) => MacrosFormView(),
+                      ),
                     );
                   },
                   style: ElevatedButton.styleFrom(

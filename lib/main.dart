@@ -1,12 +1,12 @@
+import 'package:treino_app/views/login_view.dart';
 import 'package:flutter/material.dart';
-import 'views/login_view.dart';
 
 void main() {
-  runApp(const TreinoApp());
+  runApp(MyApp());
 }
 
-class TreinoApp extends StatelessWidget {
-  const TreinoApp({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +14,6 @@ class TreinoApp extends StatelessWidget {
       title: 'Treino App',
       theme: ThemeData(
         primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: LoginView(),
     );

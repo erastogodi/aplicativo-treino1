@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../controllers/user_controller.dart';
-import 'new_macros_result_view.dart'; // Use a nova view
+import 'main_nav_bar.dart';
 
 class MacrosFormView extends StatefulWidget {
   const MacrosFormView({super.key});
@@ -25,6 +25,12 @@ class _MacrosFormViewState extends State<MacrosFormView> {
       appBar: AppBar(
         title: const Text('Inserir Dados'),
         backgroundColor: Colors.green.shade700,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context); // Volta para a tela anterior
+          },
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -150,29 +156,21 @@ class _MacrosFormViewState extends State<MacrosFormView> {
               ),
               const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: () async {
+                onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    // Usa Future para evitar travar a interface
-                    await Future.delayed(Duration(milliseconds: 100), () {
-                      _controller.setPhysicalData(
-                        weight: double.parse(_weightController.text),
-                        height: double.parse(_heightController.text),
-                        age: int.parse(_ageController.text),
-                        gender: _selectedGender,
-                        activityLevel: _selectedActivityLevel,
-                      );
-                    });
+                    _controller.setPhysicalData(
+                      weight: double.parse(_weightController.text),
+                      height: double.parse(_heightController.text),
+                      age: int.parse(_ageController.text),
+                      gender: _selectedGender,
+                      activityLevel: _selectedActivityLevel,
+                    );
 
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => NewMacrosResultView(
-                          weight: double.parse(_weightController.text),
-                          height: double.parse(_heightController.text),
-                          age: int.parse(_ageController.text),
-                          gender: _selectedGender,
-                          activityLevel: _selectedActivityLevel,
-                          controller: _controller,
+                        builder: (context) => MainNavBar.calculateMacros(
+                          userController: _controller,
                         ),
                       ),
                     );

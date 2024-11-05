@@ -2,7 +2,28 @@ import '../models/user_model.dart';
 
 class UserController {
   UserModel? user;
-  double _currentWaterIntake = 0; // Para rastrear a quantidade de água ingerida
+  double _currentWaterIntake = 0;
+
+  // Credenciais fixas para o usuário admin
+  final String _adminEmail = "admin";
+  final String _adminPassword = "admin";
+
+  // Função para autenticar o usuário
+  bool authenticate(String email, String password) {
+    if (email == _adminEmail && password == _adminPassword) {
+      user = UserModel(
+        weight: 70,
+        height: 175,
+        age: 30,
+        gender: 'Masculino',
+        activityLevel: 'Médio',
+        email: email,
+        password: password,
+      );
+      return true;
+    }
+    return false;
+  }
 
   // Define os dados físicos do usuário
   void setPhysicalData({
@@ -18,25 +39,32 @@ class UserController {
       age: age,
       gender: gender,
       activityLevel: activityLevel,
-      email: '',
-      password: '',
+      email: user?.email ?? '',
+      password: user?.password ?? '',
     );
   }
 
-  // Define os dados de login do usuário
-  void setLoginData(String email, String password) {
+  // Get que retorna todos os dados físicos do usuário
+  UserModel? getPhysicalData() => user;
+
+  // Atualiza os dados do usuário com os novos valores fornecidos
+  void updateUser({
+    double? weight,
+    double? height,
+    int? age,
+    String? gender,
+    String? activityLevel,
+    String? email,
+    required String password,
+  }) {
     if (user != null) {
-      user!.email = email;
-      user!.password = password;
-    } else {
-      user = UserModel(
-        weight: 0,
-        height: 0,
-        age: 0,
-        gender: '',
-        activityLevel: '',
-        email: email,
-        password: password,
+      user = user!.copyWith(
+        weight: weight,
+        height: height,
+        age: age,
+        gender: gender,
+        activityLevel: activityLevel,
+        email: email ?? user!.email,
       );
     }
   }
@@ -64,6 +92,7 @@ class UserController {
     };
   }
 
+  // Métodos de cálculo para os macros
   double _calculateBaseCalories() {
     double baseCalories = (10 * (user?.weight ?? 0)) +
         (6.25 * (user?.height ?? 0)) -
@@ -83,7 +112,6 @@ class UserController {
   }
 
   double _calculateProtein() => (user?.weight ?? 0) * 1.8;
-
   double _calculateFat(double totalCalories) => totalCalories * 0.25 / 9;
 
   double _calculateCarbs(double totalCalories, double protein, double fat) {
@@ -93,9 +121,7 @@ class UserController {
   double _calculateWaterIntake() => (user?.weight ?? 0) * 35;
 
   // Métodos para manipular a água ingerida
-  double getCurrentWaterIntake() {
-    return _currentWaterIntake;
-  }
+  double getCurrentWaterIntake() => _currentWaterIntake;
 
   void addWater(double totalWaterIntake) {
     _currentWaterIntake += 350; // Adiciona 350ml por clique

@@ -7,17 +7,17 @@ class NewMacrosResultView extends StatefulWidget {
   final int age;
   final String gender;
   final String activityLevel;
-  final UserController controller;
+  final UserController? controller;
 
   const NewMacrosResultView({
-    Key? key,
-    required this.weight,
-    required this.height,
-    required this.age,
-    required this.gender,
-    required this.activityLevel,
-    required this.controller,
-  }) : super(key: key);
+    super.key,
+    this.weight = 70.0, // Valor padrão
+    this.height = 170.0, // Valor padrão
+    this.age = 25, // Valor padrão
+    this.gender = 'Masculino', // Valor padrão
+    this.activityLevel = 'Moderado', // Valor padrão
+    this.controller,
+  });
 
   @override
   _NewMacrosResultViewState createState() => _NewMacrosResultViewState();
@@ -27,18 +27,20 @@ class _NewMacrosResultViewState extends State<NewMacrosResultView> {
   @override
   void initState() {
     super.initState();
-    widget.controller.setPhysicalData(
-      weight: widget.weight,
-      height: widget.height,
-      age: widget.age,
-      gender: widget.gender,
-      activityLevel: widget.activityLevel,
-    );
+    if (widget.controller != null) {
+      widget.controller!.setPhysicalData(
+        weight: widget.weight,
+        height: widget.height,
+        age: widget.age,
+        gender: widget.gender,
+        activityLevel: widget.activityLevel,
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final macros = widget.controller.calculateMacros();
+    final macros = widget.controller?.calculateMacros() ?? {};
 
     return Scaffold(
       body: Stack(
@@ -76,28 +78,20 @@ class _NewMacrosResultViewState extends State<NewMacrosResultView> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        _buildWaterIntake(macros['water']),
+                        _buildWaterIntake(macros['water'] ?? 0),
                         const SizedBox(height: 20),
-                        ListView.builder(
-                          physics: const NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: 4,
-                          itemBuilder: (context, index) {
-                            final meals = [
-                              'Café da Manhã',
-                              'Almoço',
-                              'Café da Tarde',
-                              'Jantar'
-                            ];
-                            final icons = [
-                              'assets/images/icons8-bitten-apple-40.png',
-                              'assets/images/icons8-lunch-80.png',
-                              'assets/images/icons8-breakfast-64.png',
-                              'assets/images/icons8-green-salad-48.png',
-                            ];
-                            return _buildMacroSection(
-                                meals[index], macros, icons[index]);
-                          },
+                        // Substituindo ListView.builder por Column
+                        Column(
+                          children: [
+                            _buildMacroSection('Café da Manhã', macros,
+                                'assets/images/icons8-bitten-apple-40.png'),
+                            _buildMacroSection('Almoço', macros,
+                                'assets/images/icons8-lunch-80.png'),
+                            _buildMacroSection('Café da Tarde', macros,
+                                'assets/images/icons8-breakfast-64.png'),
+                            _buildMacroSection('Jantar', macros,
+                                'assets/images/icons8-green-salad-48.png'),
+                          ],
                         ),
                       ],
                     ),
@@ -130,7 +124,7 @@ class _NewMacrosResultViewState extends State<NewMacrosResultView> {
               ),
               const SizedBox(width: 10),
               Text(
-                '${widget.controller.getCurrentWaterIntake().toStringAsFixed(0)} / ${waterIntake.toStringAsFixed(0)} ml',
+                '${widget.controller?.getCurrentWaterIntake().toStringAsFixed(0) ?? '0'} / ${waterIntake.toStringAsFixed(0)} ml',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -142,7 +136,8 @@ class _NewMacrosResultViewState extends State<NewMacrosResultView> {
           ),
           const SizedBox(height: 10),
           LinearProgressIndicator(
-            value: widget.controller.getCurrentWaterIntake() / waterIntake,
+            value: (widget.controller?.getCurrentWaterIntake() ?? 0) /
+                (waterIntake > 0 ? waterIntake : 1),
             backgroundColor: Colors.blue.shade200,
             valueColor: AlwaysStoppedAnimation<Color>(Colors.blue.shade700),
           ),
@@ -153,7 +148,7 @@ class _NewMacrosResultViewState extends State<NewMacrosResultView> {
               IconButton(
                 onPressed: () {
                   setState(() {
-                    widget.controller.removeWater();
+                    widget.controller?.removeWater();
                   });
                 },
                 icon: const Text(
@@ -178,7 +173,7 @@ class _NewMacrosResultViewState extends State<NewMacrosResultView> {
               IconButton(
                 onPressed: () {
                   setState(() {
-                    widget.controller.addWater(waterIntake);
+                    widget.controller?.addWater(waterIntake);
                   });
                 },
                 icon: const Text(
@@ -231,16 +226,17 @@ class _NewMacrosResultViewState extends State<NewMacrosResultView> {
           ),
           const SizedBox(height: 10),
           Divider(color: Colors.teal.shade300),
-          _buildMacroRow(
-              'Calorias', macros['calories'].toStringAsFixed(0), 'kcal'),
+          _buildMacroRow('Calorias',
+              macros['calories']?.toStringAsFixed(0) ?? '0', 'kcal'),
           Divider(color: Colors.teal.shade300),
           _buildMacroRow(
-              'Proteínas', macros['protein'].toStringAsFixed(1), 'g'),
-          Divider(color: Colors.teal.shade300),
-          _buildMacroRow('Gorduras', macros['fat'].toStringAsFixed(1), 'g'),
+              'Proteínas', macros['protein']?.toStringAsFixed(1) ?? '0', 'g'),
           Divider(color: Colors.teal.shade300),
           _buildMacroRow(
-              'Carboidratos', macros['carbs'].toStringAsFixed(1), 'g'),
+              'Gorduras', macros['fat']?.toStringAsFixed(1) ?? '0', 'g'),
+          Divider(color: Colors.teal.shade300),
+          _buildMacroRow(
+              'Carboidratos', macros['carbs']?.toStringAsFixed(1) ?? '0', 'g'),
         ],
       ),
     );
